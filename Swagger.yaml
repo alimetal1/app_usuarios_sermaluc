@@ -1,0 +1,125 @@
+openapi: 3.0.3
+info:
+  title: User Service API
+  description: API for managing user registration and retrieval.
+  version: 1.0.0
+servers:
+  - url: http://localhost:8080
+    description: Local server
+paths:
+  /api/usuarios:
+    post:
+      tags:
+        - Users
+      summary: Register a new user
+      description: Creates a new user in the system with the provided details.
+      operationId: createUser
+      requestBody:
+        required: true
+        description: User registration details
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserRequest'
+      responses:
+        '201':
+          description: User successfully created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserResponse'
+        '400':
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '422':
+          description: Validation error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+components:
+  schemas:
+    UserRequest:
+      type: object
+      required:
+        - name
+        - email
+        - password
+        - phones
+      properties:
+        name:
+          type: string
+          example: Alinson Morales
+        email:
+          type: string
+          format: email
+          example: ali@moraless.com
+        password:
+          type: string
+          example: AlinsonM
+        phones:
+          type: array
+          items:
+            $ref: '#/components/schemas/Phone'
+    Phone:
+      type: object
+      required:
+        - number
+        - citycode
+        - contrycode
+      properties:
+        number:
+          type: string
+          example: 999384455
+        citycode:
+          type: string
+          example: 4190000
+        contrycode:
+          type: string
+          example: 56
+    UserResponse:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          example: 595d5ee6-f11c-4e49-b425-f988621353a7
+        name:
+          type: string
+          example: Alinson Morales
+        email:
+          type: string
+          format: email
+          example: ali@moraless.com
+        created:
+          type: string
+          format: date
+          example: 2024-11-20
+        modified:
+          type: string
+          format: date
+          example: 2024-11-20
+        lastLogin:
+          type: string
+          format: date
+          example: 2024-11-20
+        token:
+          type: string
+          format: uuid
+          example: ed2f98d2-55f8-465a-965f-74c953fab822
+        active:
+          type: boolean
+          example: true
+        phones:
+          type: array
+          items:
+            $ref: '#/components/schemas/Phone'
+    ErrorResponse:
+      type: object
+      properties:
+        mensaje:
+          type: string
+          example: "Validation error: Email is invalid"
